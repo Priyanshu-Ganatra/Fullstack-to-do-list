@@ -11,7 +11,7 @@ const getAllTodos = async (req, res) => {
 }
 
 const addTodo = async (req, res) => {
-    const { data, completed } = req.body;
+    const { text: data, completed } = req.body;
 
     if (!data) {
         return res.status(400).json({ message: 'Missing data' });
@@ -37,17 +37,23 @@ const addTodo = async (req, res) => {
 
 const updateTodo = async (req, res) => {
     const { id } = req.params;
-    const { data, completed } = req.body;
+    const { data, toggle } = req.body;
 
     if (!id) {
         return res.status(400).json({ message: 'Missing id' });
     }
-    if (!data && !completed) {
-        return res.status(400).json({ message: 'Missing both data and isCompleted, atleast 1 needed' });
+    if (!data && !toggle) {
+        return res.status(400).json({ message: 'Missing both data and toggle, atleast 1 needed' });
     }
 
     try {
-        const updatedTodo = await TodoModel.findByIdAndUpdate(id, { data: data, completed: completed }, { new: true });
+        const todo = await TodoModel.findById(id);
+        let val = todo.completed
+        if (toggle === 'true') { 
+            val = !val 
+        }
+
+        const updatedTodo = await TodoModel.findByIdAndUpdate(id, { data: data, completed: val }, { new: true });
         res.json(updatedTodo);
     } catch (error) {
         console.log('Error in updateTodo', error);
@@ -65,6 +71,9 @@ const deleteATodo = async (req, res) => {
 
     try {
         const deletedTodo = await TodoModel.findByIdAndDelete(id);
+        if (!deletedTodo) {
+            return res.status(404).json({ message: 'Todo not found' });
+        }
         res.json({ message: 'Todo deleted successfully' });
     } catch (error) {
         console.log('Error in deleteATodo', error);
