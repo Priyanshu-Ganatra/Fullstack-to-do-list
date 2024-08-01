@@ -35,7 +35,9 @@ const TodoList = ({ type }) => {
             {storeTodos.map(todo => (
                 (matchType(todo.completed)) && <TodoItem key={todo._id} _id={todo._id} type={type} text={todo.data} />
             ))}
-            {count === 0 && <div className="text-center text-[#C4C4C4]">No {type} todos, please add one</div>}
+            {count === 0 && <div className="text-center text-[#C4C4C4] italic font-thin">
+                No {type} todos, please {type === 'completed' ? 'mark' : 'add'} one
+            </div>}
         </div>
     )
 }
