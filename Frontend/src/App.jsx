@@ -1,26 +1,14 @@
-/* eslint-disable no-unused-vars */
-import { useState } from 'react';
 import './App.css'
+import { useState } from 'react';
 import TodoList from './components/TodoList';
-import ToggleButton from './components/ToggleButton'
-import { IoMdArrowDropdown } from "react-icons/io";
 import useAddTodo from '../hooks/useAddTodo';
-import useDeleteAll from '../hooks/useDeleteAll';
-import useMarkAll from '../hooks/useMarkAll';
-import { useSelector } from 'react-redux';
-import toast from 'react-hot-toast';
+import ToggleAndOptions from './components/ToggleAndOptions';
 
 export default function App() {
-  const [type, setType] = useState('pending');
   const [text, setText] = useState('');
-  const storeTodos = useSelector(state => state);
-  const { loading: isAdding, addTodo } = useAddTodo();
-  const { loading: isRemovingAll, removeAllTodos } = useDeleteAll()
-  const { loading: isMarkingAll, markAll } = useMarkAll();
+  const [type, setType] = useState('pending');
 
-  const handleTypeChange = (newType) => {
-    setType(newType);
-  }
+  const { loading: isAdding, addTodo } = useAddTodo();
 
   const handleAddTodo = () => {
     if (text === '') return;
@@ -28,26 +16,12 @@ export default function App() {
     setText('')
   }
 
-  const handleRemoveAll = () => {
-    if (storeTodos.length === 0) {
-      toast.error('Add a todo first');
-      return
-    }
-    removeAllTodos()
-  }
-
-  const handleMarkAll = () => {
-    if (storeTodos.length === 0) {
-      toast.error('Add a todo first');
-      return
-    }
-    markAll()
-  }
-
   return (
+    // Main div
     <div className="w-screen min-h-screen overflow-hidden bg-background font-segoe select-none">
+      {/* All components div */}
       <div className='flex flex-col items-center'>
-        {/* heading */}
+        {/* Heading */}
         <div className="heading text-center text-[62px] font-semibold tracking-[0%] mt-14">
           <span className="bg-gradient-to-b from-zinc-100 to-cyan-400 bg-clip-text text-transparent">
             Fullstack Todo List
@@ -63,48 +37,7 @@ export default function App() {
         </div>
 
         {/* Toggle buttons and options */}
-        <div className='flex gap-4 mt-7 items-center'>
-          <span onClick={() => handleTypeChange('completed')}>
-            <ToggleButton
-              text={'Completed'}
-              textColor={'#1FC326'}
-              isActive={type === 'completed'}
-              activeColor='#EAD9D9'
-              inactiveColor='#3D3838'
-              gradientToColor='#42FF00'
-            />
-          </span>
-          <span onClick={() => handleTypeChange('pending')}>
-            <ToggleButton
-              text={'Pending'}
-              textColor={'#FF0000'}
-              isActive={type === 'pending'}
-              activeColor='#EAD9D9'
-              inactiveColor='#3D3838'
-              gradientToColor='#FF0000'
-            />
-          </span>
-          <div className="dropdown">
-            <div tabIndex={0} role="button">
-              <button className='rounded-lg p-2 h-9 bg-[#3D3838] text-white'>
-                <IoMdArrowDropdown />
-              </button>
-            </div>
-            <ul tabIndex={0} className="dropdown-content -left-[120%] menu bg-base-100 rounded-box z-[1] mt-4 w-28 p-2 shadow">
-              {type === 'pending' &&
-                <li>
-                  <button disabled={isMarkingAll} onClick={handleMarkAll}>
-                    {isMarkingAll ? <span className="loading loading-dots loading-sm"></span> : 'Mark all'}
-                  </button>
-                </li>}
-              <li>
-                <button disabled={isRemovingAll} onClick={handleRemoveAll}>
-                  {isRemovingAll ? <span className="loading loading-dots loading-sm"></span> : 'Delete all'}
-                </button>
-              </li>
-            </ul>
-          </div>
-        </div>
+        <ToggleAndOptions type={type} setType={setType}/>
 
         {/* Todo list */}
         <div className="list mt-7 w-[80%] md:w-8/12">
