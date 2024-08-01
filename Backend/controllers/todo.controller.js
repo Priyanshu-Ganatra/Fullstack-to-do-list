@@ -49,8 +49,8 @@ const updateTodo = async (req, res) => {
     try {
         const todo = await TodoModel.findById(id);
         let val = todo.completed
-        if (toggle === 'true') { 
-            val = !val 
+        if (toggle === true) {
+            val = !val
         }
 
         const updatedTodo = await TodoModel.findByIdAndUpdate(id, { data: data, completed: val }, { new: true });
