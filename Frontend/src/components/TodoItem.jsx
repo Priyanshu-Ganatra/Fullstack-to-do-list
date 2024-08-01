@@ -6,7 +6,7 @@ import { MdOutlineModeEdit } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import useDeleteItem from "../../hooks/useDeleteItem";
 import useToggleItem from "../../hooks/useToggleItem";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useUpdateItem from "../../hooks/useUpdateItem";
 
 const TodoItem = ({ text, type, _id }) => {
@@ -24,7 +24,7 @@ const TodoItem = ({ text, type, _id }) => {
     }
 
     const handleEdit = () => {
-        if(editText === '') return
+        if (editText === '') return
         editItem(_id, editText)
         document.getElementById('my_modal_2').close()
     }
@@ -48,12 +48,12 @@ const TodoItem = ({ text, type, _id }) => {
                 </span>
             </div>
             <div className="right flex p-4 gap-3 text-white">
-                <MdOutlineModeEdit onClick={() => document.getElementById('my_modal_2').showModal()} className="hover:cursor-pointer hover:scale-150 hover:text-[#2EDCBD]" />
-                <dialog id="my_modal_2" className="modal">
+                <MdOutlineModeEdit onClick={() => document.getElementById(`my_modal_${_id}`).showModal()} className="hover:cursor-pointer hover:scale-150 hover:text-[#2EDCBD]" />
+                <dialog id={`my_modal_${_id}`} className="modal">
                     <div className="modal-box w-80">
                         <h3 className="font-bold text-l">Edit todo</h3>
                         <div className="flex mt-4">
-                            <textarea className="textarea w-full" placeholder="Bio" onChange={(e) => setEditText(e.target.value)} value={editText}>
+                            <textarea className="textarea w-full" placeholder="Edit this todo" onChange={(e) => setEditText(e.target.value)} value={editText}>
                             </textarea>
                         </div>
                         <div className="flex justify-end w-full">
