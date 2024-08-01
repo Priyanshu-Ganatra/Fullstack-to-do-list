@@ -7,12 +7,12 @@ import TodoItem from "./TodoItem"
 import { useSelector } from "react-redux";
 
 const TodoList = ({ type }) => {
-    const { loading, getTodos } = useGetTodos();
+    const { loading, fetchTodos } = useGetTodos();
     const storeTodos = useSelector(state => state);
     const [count, setCount] = useState(0);
 
     useEffect(() => {
-        getTodos();
+        fetchTodos();
     }, []);
 
     useEffect(() => {

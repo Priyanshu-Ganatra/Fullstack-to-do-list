@@ -2,6 +2,7 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { removeTodoAction } from "../features/todo/todoSlice";
+import { deleteTodo } from "../src/utils/api";
 
 export default function useDeleteItem() {
     const [loading, setLoading] = useState(false);
@@ -10,14 +11,7 @@ export default function useDeleteItem() {
     const removeTodo = async (_id) => {
         setLoading(true);
         try {
-            const res = await fetch(`http://localhost:8000/api/v1/todos/${_id}`, {
-                method: 'DELETE',
-            });
-            const data = await res.json();
-            if (!res.ok) {
-                throw new Error(data.message);
-            }
-
+            await deleteTodo(_id);
             dispatch(removeTodoAction(_id));
             toast.success('Todo deleted');
         } catch (error) {

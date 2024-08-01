@@ -2,23 +2,17 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setTodosAction } from "../features/todo/todoSlice";
+import { getTodos } from "../src/utils/api";
 
 export default function useGetTodos() {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
 
-    const getTodos = async () => {
+    const fetchTodos = async () => {
         setLoading(true);
         try {
-            const res = await fetch(`http://localhost:8000/api/v1/todos`, {
-                method: 'GET',
-            });
-            const data = await res.json();
-            if (!res.ok) {
-                throw new Error(data.message);
-            }
-
-            dispatch(setTodosAction(data));
+            const todos = await getTodos();
+            dispatch(setTodosAction(todos));
         } catch (error) {
             toast.error(error.message);
         } finally {
@@ -26,5 +20,5 @@ export default function useGetTodos() {
         }
     };
 
-    return { loading, getTodos };
+    return { loading, fetchTodos };
 }
